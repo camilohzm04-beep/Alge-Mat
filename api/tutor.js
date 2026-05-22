@@ -44,7 +44,8 @@ module.exports = async function handler(req, res) {
         return;
     }
 
-    const message = typeof req.body?.message === "string" ? req.body.message.trim() : "";
+    const body = typeof req.body === "string" ? parseJsonBody(req.body) : req.body;
+    const message = typeof body?.message === "string" ? body.message.trim() : "";
     if (!message) {
         sendJson(res, 400, { ok: false, reply: "" });
         return;
@@ -52,6 +53,7 @@ module.exports = async function handler(req, res) {
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey || apiKey === "TU_API_KEY_AQUI") {
+        console.warn("GEMINI_API_KEY is not configured for this deployment.");
         sendJson(res, 200, { ok: false, reply: "" });
         return;
     }
@@ -87,6 +89,12 @@ module.exports = async function handler(req, res) {
         });
 
         if (!geminiResponse.ok) {
+            const errorText = await geminiResponse.text();
+            console.warn("Gemini request failed.", {
+                status: geminiResponse.status,
+                statusText: geminiResponse.statusText,
+                body: errorText.slice(0, 500)
+            });
             sendJson(res, 200, { ok: false, reply: "" });
             return;
         }
@@ -95,15 +103,25 @@ module.exports = async function handler(req, res) {
         const reply = extractGeminiReply(data);
 
         if (!reply) {
+            console.warn("Gemini response did not contain a text reply.");
             sendJson(res, 200, { ok: false, reply: "" });
             return;
         }
 
         sendJson(res, 200, { ok: true, reply });
     } catch (error) {
+        console.warn("Tutor function failed.", error);
         sendJson(res, 200, { ok: false, reply: "" });
     }
 };
+
+function parseJsonBody(body) {
+    try {
+        return JSON.parse(body);
+    } catch (error) {
+        return {};
+    }
+}
 
 function extractGeminiReply(data) {
     const parts = data && data.candidates && data.candidates[0] && data.candidates[0].content && Array.isArray(data.candidates[0].content.parts)
