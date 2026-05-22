@@ -1911,7 +1911,7 @@
             this.loadingMessage = null;
             this.activeTypingController = null;
             this.suggestionsVisible = true;
-            this.tutorApiEndpoint = "http://127.0.0.1:3000/api/tutor";
+            this.tutorApiEndpoint = this.resolveTutorApiEndpoint();
 
             AssistantRenderer.renderShell(this);
             this.bindEvents();
@@ -1932,6 +1932,11 @@
                 sendButton.disabled = isLoading;
                 sendButton.textContent = isLoading ? "Procesando..." : "Enviar";
             }
+        },
+
+        resolveTutorApiEndpoint() {
+            const isLocalHost = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
+            return isLocalHost ? "http://127.0.0.1:3000/api/tutor" : "/api/tutor";
         },
 
         /**
