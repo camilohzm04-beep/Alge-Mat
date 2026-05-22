@@ -5670,6 +5670,34 @@ function standardizeSystemSteps(steps = [], size) {
     });
 }
 
+function ensureDidacticSystemEvidence(steps = [], originalMat, classification, size) {
+    const enrichedSteps = [...standardizeSystemSteps(steps, size)];
+
+    if (!hasValidationEvidence(enrichedSteps, [/matriz aumentada/])) {
+        enrichedSteps.unshift(createStandardMathStep(
+            'Matriz aumentada inicial',
+            'Se construye la matriz aumentada [A | b] para organizar coeficientes y terminos independientes antes de aplicar el metodo.',
+            renderAugmentedMatrixConstruction(originalMat),
+            { kind: 'theory' }
+        ));
+    }
+
+    if (!hasValidationEvidence(enrichedSteps, [/clasific/])) {
+        enrichedSteps.push(createStandardMathStep(
+            'Clasificacion final del sistema',
+            'Se explica la clasificacion final del sistema a partir del procedimiento y de la verificacion algebraica.',
+            `
+                <p><strong>Clasificacion:</strong> ${classification.type}</p>
+                <p>${classification.explanation}</p>
+                ${classification.solutionHtml || ''}
+            `,
+            { kind: 'interpretation' }
+        ));
+    }
+
+    return enrichedSteps;
+}
+
 function getSystemAutoMethodReason(method, size, data = {}) {
     if (method === 'substitution') {
         return 'Se detectó un sistema 2x2 con un coeficiente sencillo para despejar una variable y reemplazarla sin introducir demasiadas fracciones.';
@@ -5732,7 +5760,7 @@ function buildSystemMethodResponse({
     return {
         finalMatrix: resultMatrix === null ? verificationMatrix : resultMatrix,
         verificationMatrix,
-        steps: standardizeSystemSteps(steps, size),
+        steps: ensureDidacticSystemEvidence(steps, originalMat, classification, size),
         classification,
         type: classification.type,
         explanation: classification.explanation,
