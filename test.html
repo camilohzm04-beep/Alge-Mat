@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+</head>
+<body>
+    <script>
+        const f = math.fraction('-1/3');
+        const json = JSON.stringify(f);
+        const parsed = JSON.parse(json);
+        console.log("fraction:", f);
+        console.log("JSON:", json);
+        console.log("Parsed:", parsed);
+        require('fs').writeFileSync('output.txt', `Fraction: ${JSON.stringify(f)}\nFormat default: ${math.format(f)}\nFormat parsed: ${math.format(parsed)}`);
+    </script>
+</body>
+</html>

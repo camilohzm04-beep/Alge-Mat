@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlgeMat - Álgebra Lineal Educativa</title>
+    <!-- Modern Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Math.js for Calculations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+    <!-- MathJax Configuration for Inline $ -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
+                displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']]
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Plotly for Graphs -->
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <!-- html2canvas for Exporting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-content">
+            <div class="header-badge">Universidad Cooperativa de Colombia</div>
+            <div class="header-copy">
+                <p class="header-eyebrow">Plataforma educativa de álgebra lineal</p>
+                <h1><span class="highlight">Alge</span>Mat</h1>
+                <p>Aprendizaje guiado, resolución paso a paso y apoyo visual para fortalecer tu comprensión matemática.</p>
+            </div>
+            <div class="header-emblem" aria-hidden="true">
+                <svg class="header-emblem-logo" viewBox="0 0 128 128" role="presentation" focusable="false" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="algematHeaderBg" x1="16" y1="10" x2="112" y2="118" gradientUnits="userSpaceOnUse">
+                            <stop offset="0" stop-color="#0b4f8a"/>
+                            <stop offset="0.58" stop-color="#157a8a"/>
+                            <stop offset="1" stop-color="#7fc236"/>
+                        </linearGradient>
+                        <linearGradient id="algematHeaderRing" x1="24" y1="24" x2="104" y2="104" gradientUnits="userSpaceOnUse">
+                            <stop offset="0" stop-color="#1ba6ff"/>
+                            <stop offset="1" stop-color="#d8fb36"/>
+                        </linearGradient>
+                        <linearGradient id="algematHeaderAccent" x1="26" y1="60" x2="54" y2="60" gradientUnits="userSpaceOnUse">
+                            <stop offset="0" stop-color="#52e0e0"/>
+                            <stop offset="1" stop-color="#22a8d8"/>
+                        </linearGradient>
+                        <filter id="algematHeaderShadow" x="0" y="0" width="128" height="128" filterUnits="userSpaceOnUse">
+                            <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#052743" flood-opacity="0.22"/>
+                        </filter>
+                    </defs>
+                    <g filter="url(#algematHeaderShadow)">
+                        <rect x="14" y="14" width="100" height="100" rx="28" fill="url(#algematHeaderBg)"/>
+                    </g>
+                    <circle cx="64" cy="64" r="38" fill="none" stroke="url(#algematHeaderRing)" stroke-width="9"/>
+                    <circle cx="64" cy="26" r="8" fill="#ffffff"/>
+                    <circle cx="64" cy="26" r="4.8" fill="#14a4e7"/>
+                    <circle cx="64" cy="102" r="9" fill="#ffffff"/>
+                    <circle cx="64" cy="102" r="5.4" fill="#8bc53f"/>
+                    <path d="M31 54h17" stroke="url(#algematHeaderAccent)" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M29 64h17" stroke="url(#algematHeaderAccent)" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M32 74h13" stroke="url(#algematHeaderAccent)" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M50 86 65 44a3.5 3.5 0 0 1 6.6-.1L83 75c.8 2.1 3.7 2.7 5.3 1l10.8-12a3.5 3.5 0 0 1 6 2.3v19.2" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M66 61.5h12" stroke="#ffffff" stroke-width="6.8" stroke-linecap="round"/>
+                    <path d="M53 90c9.8-.3 16.8-3 24.1-9.2 6.6 4.2 12.6 6.8 22.1 9" fill="none" stroke="#ffffff" stroke-width="4.2" stroke-linecap="round"/>
+                    <circle cx="54" cy="90" r="3.6" fill="#22b6d5"/>
+                    <circle cx="76.8" cy="80.8" r="3.6" fill="#ffffff"/>
+                    <circle cx="99.2" cy="89.4" r="3.6" fill="#d8fb36"/>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-layout">
+        <nav class="tabs-nav" aria-label="Navegación principal de módulos">
+            <div class="logo-container-sidebar">
+                <img src="logo-ucc.png" alt="Logo Universidad Cooperativa de Colombia" class="logo-sidebar">
+                <div class="logo-sidebar-copy">
+                    <strong>Entorno académico</strong>
+                    <span>Recursos visuales y prácticos para aprender álgebra lineal con claridad.</span>
+                </div>
+            </div>
+            <button class="tab-btn active" data-tab="sistemas">Sistemas de Ecuaciones</button>
+            <button class="tab-btn" data-tab="matrices">Matrices</button>
+            <button class="tab-btn" data-tab="determinantes">Determinantes</button>
+            <button class="tab-btn" data-tab="vectores">Vectores</button>
+            <button class="tab-btn" data-tab="historial">Historial</button>
+            <div class="sidebar-promo-card" aria-hidden="true">
+                <div class="sidebar-promo-graphic"></div>
+                <h3>Aprende y practica</h3>
+                <p>Explora conceptos, resuelve paso a paso y fortalece tu razonamiento matemático.</p>
+            </div>
+        </nav>
+
+        <main class="container">
+        <!-- TAB 1: SISTEMAS DE ECUACIONES -->
+        <section id="sistemas" class="tab-content active">
+            <div class="card card--featured">
+                <div class="module-heading">
+                    <div class="module-heading-icon" aria-hidden="true"></div>
+                    <div class="module-heading-copy">
+                        <h2>1. Sistemas de Ecuaciones Lineales</h2>
+                        <p class="description">Resuelve sistemas por el método de Gauss-Jordan y visualiza la solución gráfica.</p>
+                    </div>
+                </div>
+                <div class="edu-tip">
+                    <strong>Semanas 1-2:</strong> Si en el procedimiento final obtienes una fila del estilo <code>[0 0 | c]</code> (donde c no es cero), significa que las rectas son paralelas y el sistema <strong>no tiene solución</strong>.
+                </div>
+
+                <div class="module-quick-actions" aria-label="Acciones rápidas del módulo de sistemas">
+                    <button type="button" id="btn-load-example-sys" class="btn-secondary btn-example-trigger" data-module="sistemas">
+                        Cargar ejemplo
+                    </button>
+                </div>
+
+                <div class="module-grid">
+                    <div class="module-main">
+                        <div class="controls-shell">
+                            <div class="control-group-inline mb-15 practice-inline controls-grid">
+                                <div class="control-block">
+                                    <label for="sys-size">Tamaño del sistema:</label>
+                                    <select id="sys-size" class="input-select">
+                                        <option value="2">2 Ecuaciones (2x2)</option>
+                                        <option value="3">3 Ecuaciones (3x3)</option>
+                                    </select>
+                                </div>
+                                <div class="control-block">
+                                    <label for="sys-example">Modo Práctica:</label>
+                                    <select id="sys-example" class="input-select practice-select" data-selection-helper="sys-example-current">
+                                        <option value="">-- Cargar un Ejemplo --</option>
+                                        <option value="sys_unique">Solución Única 2x2</option>
+                                        <option value="sys_parallel">Sin Solución 2x2 (Paralelas)</option>
+                                        <option value="sys_infinite">Infinitas 2x2 (Mismas)</option>
+                                        <option value="sys_3x3_unique">Solución Única 3x3</option>
+                                        <option value="sys_3x3_no_solution">Sin Solución 3x3</option>
+                                        <option value="sys_3x3_infinite">Infinitas 3x3</option>
+                                    </select>
+                                    <div id="sys-example-current" class="practice-selection-note" aria-live="polite"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="matrix-showcase">
+                            <div class="matrix-showcase-header">
+                                <div>
+                                    <h3>Configuración del sistema</h3>
+                                    <p>Introduce los coeficientes y términos independientes dentro de una herramienta matemática más clara y ordenada.</p>
+                                </div>
+                                <div class="matrix-showcase-badge">Interfaz optimizada</div>
+                            </div>
+                            <div class="matrix-container">
+                                <div id="sys-inputs" class="matrix-grid"></div>
+                            </div>
+                        </div>
+
+                        <div class="action-bar metodo-wrapper">
+                            <div class="control-group mt-20 action-bar-method metodo-left">
+                                <label for="sys-method">Método:</label>
+                                <select id="sys-method" class="input-select">
+                                    <option value="auto">Automático</option>
+                                    <option value="substitution">Sustitución</option>
+                                    <option value="equalization">Igualación</option>
+                                    <option value="elimination">Reducción / Eliminación</option>
+                                    <option value="gauss">Gauss</option>
+                                    <option value="gauss_jordan">Gauss-Jordan</option>
+                                    <option value="cramer">Regla de Cramer</option>
+                                </select>
+                            </div>
+
+                            <div class="metodo-right">
+                                <button id="btn-solve-sys" class="btn-primary btn-primary--hero">Resolver y Mostrar Pasos</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <aside class="module-aside" aria-hidden="true">
+                        <div class="support-card">
+                            <div class="support-card-icon"></div>
+                            <h3>Visualiza y comprende</h3>
+                            <p>Obtén la solución paso a paso y explora su representación gráfica de forma clara e intuitiva.</p>
+                            <div class="support-card-graphic"></div>
+                        </div>
+                    </aside>
+                </div>
+
+                <div class="module-footer-note" aria-hidden="true">
+                    <span class="module-footer-note-icon"></span>
+                    <p>Plataforma segura y confiable para tu aprendizaje</p>
+                </div>
+            </div>
+
+            <div id="sys-results" class="results-panel hidden">
+                <div class="results-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Solución y Procedimiento</h3>
+                    <button class="btn-secondary btn-export" onclick="exportProcedure('sys-results', 'Sistemas_Ecuaciones')">🖨️ Exportar</button>
+                </div>
+                <div class="results-summary-strip"><span class="results-chip">Entrada</span><span class="results-chip">Proceso</span><span class="results-chip">Resultado</span><span class="results-chip">Verificación</span></div>
+                <div id="sys-steps" class="steps-container"></div>
+                <div id="sys-graph" class="graph-container"></div>
+            </div>
+        </section>
+
+        <!-- TAB 2: OPERACIONES CON MATRICES -->
+        <section id="matrices" class="tab-content">
+            <div class="card">
+                <div class="module-heading">
+                    <div class="module-heading-icon" aria-hidden="true"></div>
+                    <div class="module-heading-copy">
+                        <h2>2. Operaciones con Matrices</h2>
+                        <p class="description">Suma, resta, multiplicación, transposición y cálculo de inversa de matrices.</p>
+                    </div>
+                </div>
+                <div class="edu-tip">
+                    <strong>💡 Consejo:</strong> Para poder multiplicar dos matrices (A × B), el número de <strong>columnas de A</strong> debe ser estrictamente igual al número de <strong>filas de B</strong>.
+                </div>
+
+                <div class="module-quick-actions" aria-label="Acciones rápidas del módulo de matrices">
+                    <button type="button" id="btn-load-example-mat" class="btn-secondary btn-example-trigger" data-module="matrices">
+                        Cargar ejemplo
+                    </button>
+                </div>
+                
+                <div class="control-group-inline mb-15 practice-inline">
+                    <label for="mat-example">Modo Práctica:</label>
+                    <select id="mat-example" class="input-select practice-select" data-selection-helper="mat-example-current">
+                        <option value="">-- Selecciona un escenario --</option>
+                        <option value="add_2x2">Suma 2x2</option>
+                        <option value="sub_2x2">Resta 2x2</option>
+                        <option value="mult_compatible">Multiplicación compatible (2x3 · 3x2)</option>
+                        <option value="scalar_2x2">Producto por escalar 2x2</option>
+                        <option value="transpose_2x3">Transpuesta 2x3</option>
+                        <option value="inv_cof_2x2">Inversa por cofactores 2x2</option>
+                        <option value="inv_cof_3x3">Inversa por cofactores 3x3</option>
+                        <option value="inv_gauss_2x2">Inversa por Gauss-Jordan 2x2</option>
+                        <option value="inv_gauss_3x3">Inversa por Gauss-Jordan 3x3</option>
+                        <option value="singular_2x2">Matriz singular 2x2</option>
+                        <option value="singular_3x3">Matriz singular 3x3</option>
+                    </select>
+                    <div id="mat-example-current" class="practice-selection-note" aria-live="polite"></div>
+                    <div id="mat-op-context" class="form-helper" aria-live="polite">Operación binaria: debes completar la matriz A y la matriz B.</div>
+                </div>
+
+                <div class="matrix-setup">
+                    <div class="setup-group">
+                        <h3>Matriz A</h3>
+                        <div class="control-group-inline">
+                            <input type="number" id="matA-rows" value="2" min="1" max="5" class="input-number-small"> x
+                            <input type="number" id="matA-cols" value="2" min="1" max="5" class="input-number-small">
+                            <button id="btn-update-matA" class="btn-secondary">Generar</button>
+                        </div>
+                        <div class="matrix-container matrix-container--compact">
+                            <div id="matA-inputs" class="matrix-grid dynamic-matrix"></div>
+                        </div>
+                    </div>
+
+                    <div class="setup-group" id="group-matB">
+                        <h3>Matriz B</h3>
+                        <div class="control-group-inline">
+                            <input type="number" id="matB-rows" value="2" min="1" max="5" class="input-number-small"> x
+                            <input type="number" id="matB-cols" value="2" min="1" max="5" class="input-number-small">
+                            <button id="btn-update-matB" class="btn-secondary">Generar</button>
+                        </div>
+                        <div class="matrix-container matrix-container--compact">
+                            <div id="matB-inputs" class="matrix-grid dynamic-matrix"></div>
+                        </div>
+                    </div>
+
+                    <div class="setup-group" id="group-scalar" style="display: none;">
+                        <h3>Escalar k</h3>
+                        <div class="control-group-inline" style="padding: 10px 0;">
+                            <input type="number" id="mat-scalar-val" value="2" step="any" class="input-number-small" style="width: 100px; font-size: 1.2rem; text-align: center;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group mt-20">
+                    <label for="mat-op">Operación:</label>
+                    <select id="mat-op" class="input-select long-select" data-selection-helper="mat-op-current">
+                        <option value="add">A + B (Suma)</option>
+                        <option value="sub">A - B (Resta)</option>
+                        <option value="mult">A × B (Multiplicación)</option>
+                        <option value="scalar">k × A (Producto por un Escalar)</option>
+                        <option value="transA">A&#7488; (Transpuesta de A)</option>
+                        <option value="invA">A⁻¹ (Inversa)</option>
+                    </select>
+                    <div id="mat-op-current" class="selection-note" aria-live="polite"></div>
+                </div>
+
+                <div class="control-group" id="mat-method-group" style="display: none;">
+                    <label for="mat-method">Método:</label>
+                    <select id="mat-method" class="input-select">
+                        <option value="auto">Automático</option>
+                        <option value="gauss_jordan">Gauss-Jordan</option>
+                        <option value="cofactors">Cofactores</option>
+                    </select>
+                </div>
+
+                <button id="btn-calc-mat" class="btn-primary">Calcular Operación</button>
+            </div>
+
+            <div id="mat-results" class="results-panel hidden">
+                <div class="results-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Procedimiento y Resultado</h3>
+                    <button class="btn-secondary btn-export" onclick="exportProcedure('mat-results', 'Matrices')">🖨️ Exportar</button>
+                </div>
+                <div class="results-summary-strip"><span class="results-chip">Entrada</span><span class="results-chip">Proceso</span><span class="results-chip">Resultado</span><span class="results-chip">Verificación</span></div>
+                <div id="mat-steps" class="steps-container"></div>
+            </div>
+        </section>
+
+        <!-- TAB 3: DETERMINANTES -->
+        <section id="determinantes" class="tab-content">
+            <div class="card">
+                <div class="module-heading">
+                    <div class="module-heading-icon" aria-hidden="true"></div>
+                    <div class="module-heading-copy">
+                        <h2>3. Determinantes</h2>
+                        <p class="description">Calculo de determinantes con metodo guiado segun el orden: formula directa (2x2), regla de Sarrus (3x3) y expansion por cofactores (4x4).</p>
+                    </div>
+                </div>
+                <div class="edu-tip">
+                    <strong>💡 Consejo:</strong> El determinante nos habla sobre el comportamiento geométrico de la matriz. Si <strong>det(A) = 0</strong>, significa que el espacio colapsa y, por lo tanto, esa matriz no tiene Inversa (es singular).
+                </div>
+
+                <div class="module-quick-actions" aria-label="Acciones rápidas del módulo de determinantes">
+                    <button type="button" id="btn-load-example-det" class="btn-secondary btn-example-trigger" data-module="determinantes">
+                        Cargar ejemplo
+                    </button>
+                </div>
+                
+                <div class="control-group">
+                    <label for="det-size">Tamaño de la matriz cuadrada:</label>
+                    <select id="det-size" class="input-select">
+                        <option value="2">2x2</option>
+                        <option value="3">3x3</option>
+                        <option value="4">4x4</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="det-example">Modo Práctica:</label>
+                    <select id="det-example" class="input-select practice-select" data-selection-helper="det-example-current">
+                        <option value="">-- Selecciona un tipo de ejercicio --</option>
+                        <option value="det_2x2_basic">Determinante 2x2 por fórmula directa</option>
+                        <option value="det_3x3_sarrus">Determinante 3x3 por regla de Sarrus</option>
+                        <option value="det_4x4_cofactor">Determinante 4x4 por cofactores</option>
+                    </select>
+                    <div id="det-example-current" class="practice-selection-note" aria-live="polite"></div>
+                </div>
+
+                <div class="control-group">
+                    <label for="det-method">Método:</label>
+                    <select id="det-method" class="input-select">
+                        <option value="auto">Automático</option>
+                        <option value="direct">Fórmula directa</option>
+                    </select>
+                </div>
+
+                <div class="matrix-container">
+                    <div id="det-inputs" class="matrix-grid dynamic-matrix"></div>
+                </div>
+
+                <button id="btn-calc-det" class="btn-primary">Calcular Determinante</button>
+            </div>
+
+            <div id="det-results" class="results-panel hidden">
+                <div class="results-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Procedimiento y Resultado</h3>
+                    <button class="btn-secondary btn-export" onclick="exportProcedure('det-results', 'Determinantes')">🖨️ Exportar</button>
+                </div>
+                <div class="results-summary-strip"><span class="results-chip">Entrada</span><span class="results-chip">Proceso</span><span class="results-chip">Resultado</span><span class="results-chip">Verificación</span></div>
+                <div id="det-steps" class="steps-container"></div>
+            </div>
+        </section>
+
+        <!-- TAB 4: VECTORES -->
+        <section id="vectores" class="tab-content">
+            <div class="card">
+                <div class="module-heading">
+                    <div class="module-heading-icon" aria-hidden="true"></div>
+                    <div class="module-heading-copy">
+                        <h2>4. Operaciones con Vectores</h2>
+                        <p class="description">Suma, producto punto, magnitudes y ángulos entre vectores geométricos.</p>
+                    </div>
+                </div>
+                <div class="edu-tip">
+                    <strong>💡 Consejo:</strong> El **Producto Punto** (u · v) es un test rápido de perpendicularidad. Si el producto te da exactamente cero (0), significa que los dos vectores forman un **ángulo de 90°** (son ortogonales).
+                </div>
+
+                <div class="module-quick-actions" aria-label="Acciones rápidas del módulo de vectores">
+                    <button type="button" id="btn-load-example-vec" class="btn-secondary btn-example-trigger" data-module="vectores">
+                        Cargar ejemplo
+                    </button>
+                </div>
+                
+                <div class="control-group">
+                    <label for="vec-dim">Dimensión:</label>
+                    <select id="vec-dim" class="input-select">
+                        <option value="2">2D (x, y)</option>
+                        <option value="3">3D (x, y, z)</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="vec-example">Modo Práctica:</label>
+                    <select id="vec-example" class="input-select practice-select" data-selection-helper="vec-example-current">
+                        <option value="">-- Selecciona un tipo de ejercicio --</option>
+                        <option value="vec_add_2d">Suma de vectores en 2D</option>
+                        <option value="vec_sub_2d">Resta de vectores en 2D</option>
+                        <option value="vec_dot_2d">Producto punto en 2D</option>
+                        <option value="vec_mag_2d">Magnitud de u en 2D</option>
+                        <option value="vec_angle_2d">Ángulo entre u y v en 2D</option>
+                        <option value="vec_proj_2d">Proyección de u sobre v en 2D</option>
+                        <option value="vec_add_3d">Suma de vectores en 3D</option>
+                        <option value="vec_sub_3d">Resta de vectores en 3D</option>
+                        <option value="vec_dot_3d">Producto punto en 3D</option>
+                        <option value="vec_mag_3d">Magnitud de u en 3D</option>
+                        <option value="vec_angle_3d">Ángulo entre u y v en 3D</option>
+                        <option value="vec_cross_3d">Producto cruz en 3D</option>
+                        <option value="vec_proj_3d">Proyección de u sobre v en 3D</option>
+                    </select>
+                    <div id="vec-example-current" class="practice-selection-note" aria-live="polite"></div>
+                </div>
+
+                <div class="vectors-setup">
+                    <div class="setup-group">
+                        <h3>Vector u</h3>
+                        <div id="vecA-inputs" class="vector-grid"></div>
+                    </div>
+                    <div class="setup-group" id="group-vecB">
+                        <h3>Vector v</h3>
+                        <div id="vecB-inputs" class="vector-grid"></div>
+                    </div>
+                </div>
+
+                <div class="control-group mt-20">
+                    <label for="vec-op">Operación:</label>
+                    <select id="vec-op" class="input-select">
+                        <option value="add">u + v (Suma)</option>
+                        <option value="sub">u - v (Resta)</option>
+                        <option value="dot">u · v (Producto Punto)</option>
+                        <option value="mag_u">||u|| (Magnitud de u)</option>
+                        <option value="angle">Ángulo entre u y v</option>
+                        <option value="cross">u × v (Producto Cruz)</option>
+                        <option value="proj">Proyección de u sobre v</option>
+                    </select>
+                </div>
+
+                <button id="btn-calc-vec" class="btn-primary">Calcular, Explicar y Graficar</button>
+            </div>
+
+            <div id="vec-results" class="results-panel hidden">
+                <div class="results-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Procedimiento y Resultado</h3>
+                    <button class="btn-secondary btn-export" onclick="exportProcedure('vec-results', 'Vectores')">🖨️ Exportar</button>
+                </div>
+                <div class="results-summary-strip"><span class="results-chip">Entrada</span><span class="results-chip">Proceso</span><span class="results-chip">Resultado</span><span class="results-chip">Verificación</span></div>
+                <div id="vec-steps" class="steps-container"></div>
+                <div id="vec-graph" class="graph-container"></div>
+            </div>
+        </section>
+
+        <section id="historial" class="tab-content">
+            <div class="card">
+                <div class="module-heading">
+                    <div class="module-heading-icon" aria-hidden="true"></div>
+                    <div class="module-heading-copy">
+                        <h2>5. Historial de Procedimientos</h2>
+                        <p class="description">Consulta ejercicios resueltos, revisa el detalle y reutiliza sus datos sin volver a escribir todo.</p>
+                    </div>
+                </div>
+                <div class="edu-tip">
+                    <strong>💡 Consejo:</strong> Usa el historial para comparar procedimientos, retomar ejercicios anteriores y practicar variaciones a partir de ejemplos ya resueltos.
+                </div>
+                <div class="history-toolbar">
+                    <button id="btn-refresh-history" class="btn-secondary">Actualizar Historial</button>
+                    <button id="btn-clear-history" class="btn-secondary">Limpiar Historial</button>
+                </div>
+                <div class="history-layout">
+                    <div id="history-list" class="history-list"></div>
+                    <div id="history-detail" class="history-detail">
+                        <div class="history-empty-state">
+                            Selecciona una entrada del historial para ver el procedimiento completo.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        </main>
+    </div>
+
+    <footer>
+        <p><strong>AlgeMat</strong> - Herramienta educativa de álgebra lineal<br>Universidad Cooperativa de Colombia</p>
+    </footer>
+
+    <!-- Bolita de Chat (Asistente Conceptual) -->
+    <div class="chat-bubble-container">
+        <div id="mini-chat" class="mini-chat-window">
+            <div class="mini-chat-header">
+                <span>Tutor conceptual AlgeMat</span>
+                <button style="background:none; border:none; color:white; cursor:pointer; font-size:1.2rem;" onclick="toggleChat()">✕</button>
+            </div>
+            <div id="chat-body" class="mini-chat-body" aria-live="polite">
+                <!-- Content will be injected by assistant.js -->
+            </div>
+            <div class="mini-chat-footer">
+                Pulsa ESC para cerrar
+            </div>
+        </div>
+        <button class="chat-assistant-btn" onclick="toggleChat()" title="Tutor conceptual de Álgebra Lineal">
+            <img src="assistant-icon.png" alt="Chat Assistant">
+            <div class="online-indicator"></div>
+        </button>
+    </div>
+
+    <script src="app.js?v=1"></script>
+    <script src="assistant.js"></script>
+</body>
+</html>
